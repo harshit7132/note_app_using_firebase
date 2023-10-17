@@ -61,5 +61,13 @@
 	</array>
 	<!-- End of the Google Sign-in Section -->
 
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To Pick user image from user gallery to maintain user profile in app</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To Capture user image using to camera to maintain user profile in app</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To Capture to voice with video using to camera to verify user profile maintain user profile authenticity in app</string>
+
+
 </dict>
 </plist>

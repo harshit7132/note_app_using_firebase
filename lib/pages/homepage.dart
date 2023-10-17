@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app_using_firebase/model/note_model.dart';
+import 'package:note_app_using_firebase/pages/profile/profile_page.dart';
 import 'package:note_app_using_firebase/pages/user_onboarding/login_page.dart';
 import 'package:note_app_using_firebase/share_pref/share_pref.dart';
 
@@ -36,8 +37,23 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Notes'),
         backgroundColor: const Color(0xfffa709a),
         actions: [
+          IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(userId: widget.userID),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.person_2_rounded,
+              size: 30,
+              color: Colors.black,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: IconButton(
               onPressed: () async {
                 SharePreference.setShared('', false);
@@ -84,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.all(21.0),
                   child: TextField(
-                    onChanged: (value) async {
+                    onSubmitted: (value) async {
                       var searchQuery = await db
                           .collection('Notes')
                           .where('title', isGreaterThanOrEqualTo: value)

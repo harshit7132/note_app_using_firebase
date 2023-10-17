@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 350,
+                height: 200,
                 child: Lottie.asset(
                   JsonConstants.loginJson,
                 ),
