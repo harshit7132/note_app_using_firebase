@@ -15,7 +15,8 @@ InputDecoration myInputDecoration({
         ? InkWell(onTap: onSuffixIconTap, child: Icon(mSuffixIcon))
         : null,
     labelText: mLabel,
-    alignLabelWithHint: true,
+
+    // alignLabelWithHint: true,
     hintText: mHint,
     border: const UnderlineInputBorder(
       borderSide: BorderSide(

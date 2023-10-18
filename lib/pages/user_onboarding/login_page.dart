@@ -22,6 +22,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  late FirebaseFirestore db;
   var emailController = TextEditingController();
   var passController = TextEditingController();
   var nameController = TextEditingController();
@@ -30,14 +31,24 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   var passConfirmController = TextEditingController();
   var mobileController = TextEditingController();
 
+  String userIdForLogin = '';
+  String? userId;
+
   bool isHidden = false;
   var mAuth = FirebaseAuth.instance;
   String mVerificationID = '';
 
   @override
+  void initState() {
+    super.initState();
+    db = FirebaseFirestore.instance;
+  }
+
+  @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 2, vsync: this);
     return Scaffold(
+      //* Top content
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -52,7 +63,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 200,
+                height: 300,
                 child: Lottie.asset(
                   JsonConstants.loginJson,
                 ),
@@ -76,23 +87,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(31),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 45),
+                  // labelPadding: const EdgeInsets.symmetric(horizontal: 45),
                   tabs: const [
                     Tab(
-                      child: Text(
-                        'Existing',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      child: SizedBox(
+                        width: 125,
+                        child: Text(
+                          'Existing',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
                     Tab(
-                      child: Text(
-                        'New',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      child: SizedBox(
+                        width: 125,
+                        child: Text(
+                          'New',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
@@ -115,6 +134,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
+//* Login Page
   loginWidget() {
     return Column(
       children: [
@@ -163,29 +183,81 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   onTap: () async {
                     var auth = FirebaseAuth.instance;
                     var email = emailController.text.toString();
+                    print(email);
                     var password = passController.text.toString();
+                    print(password);
 
-                    try {
-                      var credSignUp = await auth.signInWithEmailAndPassword(
-                          email: email, password: password);
+                    print('clicked');
 
-                      print(
-                          "Success: User Logged in.. ${credSignUp.user!.uid}");
-
-                      //Shared Preferences..
-                      SharePreference.setShared(credSignUp.user!.uid, true);
-
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(
-                            userID: credSignUp.user!.uid,
+                    db
+                        .collection('users')
+                        .where('email', isEqualTo: email)
+                        .where('password', isEqualTo: password)
+                        .get()
+                        .then(
+                      (value) {
+                        print('logged in');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(
+                              userID: value.docs[0].id,
+                            ),
                           ),
-                        ),
-                      );
-                    } catch (error) {
-                      print('Error is : $error');
-                    }
+                        );
+                      },
+                    );
+
+                    // FutureBuilder(
+                    //   future:
+                    //   builder: (index, snapshot) {
+                    //     print('future');
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       return const CircularProgressIndicator();
+                    //     } else if (snapshot.hasError) {
+                    //       return const ScaffoldMessenger(
+                    //           child: SnackBar(
+                    //               content: Text('Something when Wrong!!')));
+                    //     } else if (snapshot.hasData) {
+                    //       Navigator.pushReplacement(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => HomePage(
+                    //             userID: 'nq6WJLDyXhSCc3R1XjEhrNFbNR12',
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }
+                    //     return Text('Not Found');
+                    //   },
+                    // );
+
+                    // try {
+                    //   var credSignUp = await auth.signInWithEmailAndPassword(
+                    //       email: email, password: password);
+
+                    //   print(
+                    //       "Success: User Logged in.. ${credSignUp.user!.uid}");
+
+                    //   userIdForLogin = credSignUp.user!.uid;
+
+                    //   //Shared Preferences..
+                    //   SharePreference.setShared(credSignUp.user!.uid, true);
+
+                    //   Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => HomePage(
+                    //         userID: credSignUp.user!.uid,
+                    //       ),
+                    //     ),
+                    //   );
+                    // } catch (error) {
+                    //   ScaffoldMessenger.of(context)
+                    //       .showSnackBar(SnackBar(content: Text("$error")));
+                    //   print('Error is : $error');
+                    // }
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -269,10 +341,25 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             InkWell(
               onTap: () async {
                 try {
-                  await GoogleAuthServices().signupWithGoogle();
-                  print('Google Singed in');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Singing with Google')));
+
+                  var uID = await GoogleAuthServices().signupWithGoogle();
+                  print('Google Singed in ${uID}');
+
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Singed in')));
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HomePage(userID: uID),
+                    ),
+                  );
                 } on FirebaseAuthException catch (e) {
                   print("Error of goolge Auth : $e");
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('$e')));
                 }
               },
               child: Image.asset(
@@ -296,6 +383,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
+//* Signup Page
   Stack signupWidget() {
     return Stack(
       children: [
@@ -365,7 +453,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
         ),
         Positioned(
-          bottom: 15,
+          bottom: 125,
           left: 60,
           child: InkWell(
             onTap: () async {
@@ -382,6 +470,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   verificationCompleted: (PhoneAuthCredential credential) {
                     mAuth.signInWithCredential(credential).then(
                       (value) {
+                        userId = value.user!.uid;
                         print("Login :${value.user!.uid}");
                       },
                     );
@@ -398,6 +487,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                         builder: (context) => OtpPage(
+                            password: password,
                             email: email,
                             name: name,
                             mobile: mobile,

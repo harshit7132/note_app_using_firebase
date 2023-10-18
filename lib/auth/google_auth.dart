@@ -20,6 +20,9 @@ class GoogleAuthServices {
 
 //*Finally Logged in
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    var checkAuth =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return checkAuth.user!.uid;
   }
 }

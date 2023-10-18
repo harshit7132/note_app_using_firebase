@@ -118,9 +118,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(widget.userId)
-                              .update(
+                              .set(
                                 UserModel(
+                                  email: 'debudewanagan@gmail.com',
                                   profilePic: downloadUrl,
+                                  id: widget.userId,
+                                  mobNumber: '8770024607',
+                                  name: 'debu',
                                 ).toMap(),
                               )
                               .then((value) => print('Profile Photo Updated'));

@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app_using_firebase/firebase_options.dart';
-import 'package:note_app_using_firebase/pages/profile/profile_page.dart';
-import 'package:note_app_using_firebase/pages/user_onboarding/login_page.dart';
+import 'package:note_app_using_firebase/pages/splash_screen/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: SplashScreen(),
     );
   }
 }

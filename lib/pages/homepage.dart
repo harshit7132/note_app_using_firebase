@@ -24,6 +24,8 @@ class _HomePageState extends State<HomePage> {
   var descUpdateController = TextEditingController();
   var searchController = TextEditingController();
 
+  bool isFirst = true;
+
   @override
   void initState() {
     super.initState();
@@ -80,10 +82,10 @@ class _HomePageState extends State<HomePage> {
             .doc(widget.userID)
             .collection('notes')
             .where('title',
-                isGreaterThanOrEqualTo: searchController.text.toString())
+                isGreaterThanOrEqualTo: searchController.text.toLowerCase())
             .where('title',
                 isLessThanOrEqualTo:
-                    searchController.text.toString() + '\uf8ff')
+                    searchController.text.toLowerCase() + '\uf8ff')
             .snapshots(),
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -100,11 +102,18 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.all(21.0),
                   child: TextField(
-                    onSubmitted: (value) async {
+                    autofocus: !isFirst,
+                    onChanged: (value) async {
+                      if (isFirst) {
+                        isFirst = false;
+                      }
                       var searchQuery = await db
                           .collection('Notes')
-                          .where('title', isGreaterThanOrEqualTo: value)
-                          .where('title', isLessThanOrEqualTo: value + '\uf8ff')
+                          .where('title',
+                              isGreaterThanOrEqualTo: value.toLowerCase())
+                          .where('title',
+                              isLessThanOrEqualTo:
+                                  value.toLowerCase() + '\uf8ff')
                           .get();
 
                       setState(() {
@@ -142,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text('${model.body}'),
                               const SizedBox(width: 10),
-                              // Text('${model.timer}')
+                              Text('${model.timer!.toDate()}')
                             ],
                           ),
                           trailing: InkWell(

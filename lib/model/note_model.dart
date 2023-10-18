@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NoteModel {
   String? title;
   String? body;
-  String? timer;
+  Timestamp? timer;
 
   NoteModel({this.title, this.body, this.timer});
 
@@ -9,7 +11,7 @@ class NoteModel {
     return NoteModel(
       title: json['title'],
       body: json['body'],
-      timer: json[DateTime.now()],
+      timer: json['timer'],
     );
   }
 

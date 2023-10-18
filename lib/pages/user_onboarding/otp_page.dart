@@ -13,15 +13,17 @@ class OtpPage extends StatefulWidget {
   String email;
   String name;
   String mobile;
+  String password;
+
   String mVerificationID;
 
-  OtpPage({
-    super.key,
-    required this.email,
-    required this.name,
-    required this.mobile,
-    required this.mVerificationID,
-  });
+  OtpPage(
+      {super.key,
+      required this.email,
+      required this.name,
+      required this.mobile,
+      required this.mVerificationID,
+      required this.password});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -250,11 +252,12 @@ class _OtpPageState extends State<OtpPage> {
                 var db = FirebaseFirestore.instance;
 
                 db.collection('users').doc(credId.user!.uid).set(UserModel(
-                      email: widget.email,
-                      name: widget.name,
-                      mobNumber: widget.mobile,
-                      id: credId.user!.uid,
-                    ).toMap());
+                        email: widget.email,
+                        name: widget.name,
+                        mobNumber: widget.mobile,
+                        id: credId.user!.uid,
+                        password: widget.password)
+                    .toMap());
                 print("User Added: ${credId.user!.uid}");
               } on FirebaseAuthException catch (e) {
                 print("Error is " + e.toString());
