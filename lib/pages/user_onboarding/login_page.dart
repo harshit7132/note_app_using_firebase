@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:note_app_using_firebase/Screen_view/home_screen.dart';
 import 'package:note_app_using_firebase/auth/google_auth.dart';
 import 'package:note_app_using_firebase/constants/img_constant.dart';
 import 'package:note_app_using_firebase/constants/json_constant.dart';
-import 'package:note_app_using_firebase/model/user_model.dart';
-import 'package:note_app_using_firebase/pages/homepage.dart';
 import 'package:note_app_using_firebase/pages/user_onboarding/otp_page.dart';
 import 'package:note_app_using_firebase/share_pref/share_pref.dart';
 
+import '../../App_folder/Home_page/home_page.dart';
 import '../../widgets/my_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -200,8 +200,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(
-                              userID: value.docs[0].id,
+                            builder: (context) => HomeScreen(
+                              userId: value.docs[0].id,
                             ),
                           ),
                         );
@@ -344,18 +344,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Singing with Google')));
 
-                  var uID = await GoogleAuthServices().signupWithGoogle();
-                  print('Google Singed in ${uID}');
+                  // var uID = await GoogleAuthServices().signupWithGoogle();
+                  // print('Google Singed in ${uID}');
 
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Singed in')));
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => HomePage(userID: uID),
-                    ),
-                  );
                 } on FirebaseAuthException catch (e) {
                   print("Error of goolge Auth : $e");
                   ScaffoldMessenger.of(context)

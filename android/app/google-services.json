@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "767905707561",
-    "project_id": "note-app-186b2",
-    "storage_bucket": "note-app-186b2.appspot.com"
+    "project_number": "162546141636",
+    "project_id": "my-notesapp-new",
+    "storage_bucket": "my-notesapp-new.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:767905707561:android:0cc3d0613eac6afa5ece38",
+        "mobilesdk_app_id": "1:162546141636:android:1ac7ef68d136f7e054fc91",
         "android_client_info": {
           "package_name": "com.example.note_app_using_firebase"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDmn-xL_xStWYgiRhOtmmo5gOBaj5CxeP8"
+          "current_key": "AIzaSyCTQkGDi8SKAoNbfKNK0lYebo8lB1wNitg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162546141636:android:7ae5154bf26bc2c354fc91",
+        "android_client_info": {
+          "package_name": "com.example.wsb_78"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTQkGDi8SKAoNbfKNK0lYebo8lB1wNitg"
         }
       ],
       "services": {
